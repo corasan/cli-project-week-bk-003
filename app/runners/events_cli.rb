@@ -7,8 +7,9 @@ class EventsCLI < Thor
         # puts "Search events by keyword: "
         # search(keyword)
         print "searching"
-        puts loading
+        # puts loading
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
+        scraper(keyword)
     end
 
     def help
@@ -27,6 +28,12 @@ class EventsCLI < Thor
                 sleep 0.5
                 i += 1
             end
+        end
+
+        def scraper(keyword)
+            keyword_doc = open("#{EventsListings::BASE_SEARCH}#{keyword}&api-key=#{EventsListings::API_KEY}").read
+            json = JSON.parse(keyword_doc)
+            ap json
         end
     }
     # def search(keyword, category="Music", borough="Manhattan")

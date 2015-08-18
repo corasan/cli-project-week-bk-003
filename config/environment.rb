@@ -11,3 +11,4 @@ require 'open-uri'
 require 'json'
 require 'nokogiri'
 require 'pry'
+require "awesome_print"
