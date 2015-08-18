@@ -1,0 +1,3 @@
+class EventsScraper
+
+end
