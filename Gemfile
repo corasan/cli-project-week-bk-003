@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 
 gem "nokogiri"
+gem "thor"
+# gem "optitron"
 
 group "development" do
   gem "pry"
