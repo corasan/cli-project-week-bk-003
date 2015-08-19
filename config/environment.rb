@@ -12,3 +12,9 @@ require 'json'
 require 'nokogiri'
 require 'pry'
 require "awesome_print"
+require 'rubygems'
+require 'sequel'
+require 'sqlite3'
+require 'sanitize'
+require "thor"
+require 'userinput'

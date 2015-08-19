@@ -1,18 +1,9 @@
-require 'nokogiri'
-require 'open-uri'
-require 'json'
-require 'awesome_print'
-require "pry"
 require_relative 'eventdatabase'
-
-
-#key 0b7c8b92227545449aa4998f9fce1601:9:72708466
-# url = "http://api.nytimes.com/svc/events/{version}/listings[.response-format]?[optional-param1=value1]&[...]&api-key={your-API-key}"
 class Events
 	def initialize
 	@EVENT_KEY = '0b7c8b92227545449aa4998f9fce1601:9:72708466'
 	@URL = 'http://api.nytimes.com/svc/events/v2/listings.json?'
-	@event_db = EventDatabase.new 
+	@event_db = EventDatabase.new
 
 	end
 
@@ -38,14 +29,11 @@ class Events
 	end
 
 	def get_hash_value(keyword)
-		get_event_hash.each do |ele|
-		puts ele[keyword]
-		end
+		get_event_hash.each {|ele| puts ele[keyword]}
 	end
-	
+
 	def get_event_db
 		@event_db
 	end
 
 end
-
