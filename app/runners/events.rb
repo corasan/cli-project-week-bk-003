@@ -12,6 +12,8 @@ class Events
 	def initialize
 	@EVENT_KEY = '0b7c8b92227545449aa4998f9fce1601:9:72708466'
 	@URL = 'http://api.nytimes.com/svc/events/v2/listings.json?'
+	@event_db = EventDatabase.new 
+
 	end
 
 	def search(keyword)
@@ -19,7 +21,6 @@ class Events
 		js =  open(url).read
 		event_hash = JSON.parse(js)
 		@event = event_hash["results"]
-		@event_db = EventDatabase.new 
 		@event_db.populate_table(@event)
 	end
 
@@ -28,7 +29,6 @@ class Events
 		js =  open(url).read
 		event_hash = JSON.parse(js)
 		@event = event_hash["results"]
-		@event_db = EventDatabase.new 
 		@event_db.populate_table(@event)
 	end
 
