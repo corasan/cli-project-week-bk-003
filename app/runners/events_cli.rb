@@ -1,24 +1,66 @@
 # require "pry"
 require "thor"
 require 'awesome_print'
+require 'userinput'
 class EventsCLI < Thor
 
-    desc "search KEYWORD", "Search for an even using a keyword"
-		BOROUGH = ["Manhattan","Brooklyn","Queens","Staten Island","Bronx"]
-  option :Manhattan, :aliases => "-m", :desc => "filters for Manhattan"  
+	option :Manhattan, :aliases => "-m", :desc => "filters for Manhattan"  
 	option :Brooklyn, :aliases => "-b", :desc => "filters for brooklyn"
 	option :Queens, :aliases => "-q", :desc => "filters for Queens"
 	option :StatenIsland, :aliases => "-s", :desc => "filters for StatenIsland"
 	option :Bronx,:aliases => "-x", :desc => "filters for Bronx"
-
-    def search(keyword)
-			flag = ""
-			# puts "Search events by keyword: "
+	option :Full, :aliases => "-f", :desc => "Shows all information on event"	
+	
+	desc "search [KEYWORD][Borough]", "Search for an event using a keyword"
+	def search(keyword)
+			flag = get_borough(options)
+				# puts "Search events by keyword: "
         # search(keyword)
         print "searching"
-        # puts loading
+        loading
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
-	 			if options[:Manhattan]
+	 			events = Events.new
+				events.search_borough(keyword,flag)
+				extract_data(show_info(options,events)) 
+				favorite(events)
+				user_open_url(events)
+	end
+
+	desc "Help method", "information on how to use cli"
+option :info,:aliases => "-t", :desc =>"flag for borough help"
+    def help
+			if options[:info]
+				puts "Borough Flags"
+				puts "--Manhattan -m, --Brooklyn -b, --Queens -q, --Bronx -x, --StatenIsland -s"
+			end
+			 	puts "Welcome! Search for events in New York."
+        puts "Available commands: "
+        puts "-search <KEYWORD>"
+        puts "-search_filter <CATEGORY><BOROUGH>"
+        puts "-help"
+    end
+
+    no_commands{
+
+        def loading
+            i = 0
+            while i <= 4
+                print "."
+                sleep 0.5
+                i += 1
+            end
+				end
+
+			def extract_data(hash)
+			hash.each do |array|
+						  array.each do |key,values|
+							 puts "#{key}: #{values}\n"
+							end
+							puts "-----------------------------------------------------------"
+					 end		
+			end
+				def get_borough(options)
+		if options[:Manhattan]
 					flag = "Manhattan"
 				elsif options[:Brooklyn]
 					flag = "Brooklyn"
@@ -31,35 +73,42 @@ class EventsCLI < Thor
 				else
 					flag = "Manhattan+Bronx+Brooklyn+Queens+StatenIsland" 
 				end	
-				events = Events.new
-				events.search_borough(keyword,flag)
-			#	ap events.get_event_db.all
-					ds =	events.get_event_db.select(:EventName,:VenueName,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)
-					 ds.each do |v|
-						  v.each do |k,d|
-							 puts "#{k}: #{d}\n"
+				end
+				
+			 def open_url(url)
+				system("open", url)
+			 end	 
+			 
+			 def user_open_url(events)
+			prompt = UserInput.new(message: 'Do you want to open Event URL')
+					if prompt.ask.match(/[yY]/)
+							prompt = UserInput.new(message: 'Enter EventID')
+							event_id = prompt.ask
+							ds = events.get_event_db.select(:EventDetailURL).where(:EventID => event_id)
+							ds.each do |k|
+							open_url(k[:EventDetailURL])
 							end
-							puts "-----------------------------------------------------------"
-		end	 
-    end
+					end
+			 end
 
-    def help
-        puts "Welcome! Search for events in New York."
-        puts "Available commands: "
-        puts "-search <KEYWORD>"
-        puts "-search_filter <CATEGORY><BOROUGH>"
-        puts "-help"
-    end
+			 def show_info(options,events)
+				 if options[:Full]
+					 return ds = events.get_event_db.all
+				 else
+					 return	ds =	events.get_event_db.event.select(:EventID,:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)	
+				end
+			 end
 
-    no_commands{
-        def loading
-            i = 0
-            while i <= 4
-                print "."
-                sleep 0.5
-                i += 1
-            end
-        end
- 
+			 def favorite(events)
+					prompt = UserInput.new(message: 'Do you want to add an event to favorites')
+					if prompt.ask.match(/[yY]/)
+						prompt = UserInput.new(message: 'Enter EventID')
+						until prompt.ask.match(/[0-9]/)	
+					end
+					event_id = prompt
+					ds = events.get_event_db.favorite.insert(:EventID_fk => event_id)
+			 end
+			 end
+						
    }
 end
