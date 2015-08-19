@@ -9,11 +9,12 @@ require_relative 'eventdatabase'
 #key 0b7c8b92227545449aa4998f9fce1601:9:72708466
 # url = "http://api.nytimes.com/svc/events/{version}/listings[.response-format]?[optional-param1=value1]&[...]&api-key={your-API-key}"
 class Events
+	def initialize
+	@EVENT_KEY = '0b7c8b92227545449aa4998f9fce1601:9:72708466'
+	@URL = 'http://api.nytimes.com/svc/events/v2/listings.json?'
+	end
 
-@@EVENT_KEY = '0b7c8b92227545449aa4998f9fce1601:9:72708466'
-@@URL = 'http://api.nytimes.com/svc/events/v2/listings.json?'
-
-def search(keyword)
+	def search(keyword)
 		url =	"#{@@URL}&query=#{keyword}&api-key=#{@@EVENT_KEY}"
 		js =  open(url).read
 		event_hash = JSON.parse(js)
@@ -22,14 +23,14 @@ def search(keyword)
 		@event_db.populate_table(@event)
 	end
 
-def search_borough(keyword,burough)
-url =	"#{@@URL}&filters=borough:#{burough}&query=#{keyword}&api-key=#{@@EVENT_KEY}"
+	def search_borough(keyword,burough)
+		url =	"#{@URL}&filters=borough:#{burough}&query=#{keyword}&api-key=#{@EVENT_KEY}"
 		js =  open(url).read
 		event_hash = JSON.parse(js)
 		@event = event_hash["results"]
 		@event_db = EventDatabase.new 
 		@event_db.populate_table(@event)
-end
+	end
 
 
 	def get_event_hash
