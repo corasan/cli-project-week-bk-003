@@ -31,15 +31,15 @@ class EventDatabase
       String :KidFriendly 
       String :Festival 
       String :Date
-			String :RecurringStartDate 
-      String :RecurringEndDate 
+			Date :RecurringStartDate 
+      Date :RecurringEndDate 
       String :RecurringDays
 		end
+
 			@@DB.create_table :FavoriteTable do
   		primary_key :FavoriteID
 			String :EventID
 			end
-
   end
   
 def populate_table(event_array)
@@ -48,6 +48,10 @@ def populate_table(event_array)
     unless value["recur_days"].nil?
       days = value["recur_days"].join(",")
     end
+		unless value["RecurringStartDate"].nil? || value["RecurringEndDate"].nil?
+		recurring_start_date =	Date.parse(value["RecurringStartDate"])
+		recurring_end_date = Date.parse(value["RecurringEndDate"])
+		end
 		@event.insert(:EventName => value["venue_name"],:EventDetailURL => value["event_detail_url"],
 									:Description => Sanitize.clean(value["web_description"]),:VenueName => value["venue_name"],:VenueDetailURL => value["venue_detail_url"],
     :Borough => value["borough"],:Neighborhood => value["neighborhood"],:StreetAddress => value["street_address"],
@@ -55,10 +59,14 @@ def populate_table(event_array)
     :PostalCode => value["postal_code"],:Telephone => value["telephone"],:VenueWebsite => value["venue_website"],
     :CriticName => value["critic_name"],:Category => value["category"],
     :Admission => value["free"],:KidFriendly => value["kid_friendly"],:Festival => value["festival"],
-		:Date => value["date_time_description"],:RecurringStartDate => value["recurring_start_date"],
-    :RecurringEndDate => value["recurring_end_date"],:RecurringDays => days)
+		:Date => value["date_time_description"],:RecurringStartDate => recurring_start_date,
+    :RecurringEndDate => recurring_end_date,:RecurringDays => days)
 		end
-  end
+end
+
+
+	def insert_table
+	end
 end
 
 

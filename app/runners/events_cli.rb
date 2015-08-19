@@ -9,7 +9,7 @@ class EventsCLI < Thor
 	option :Queens, :aliases => "-q", :desc => "filters for Queens"
 	option :StatenIsland, :aliases => "-s", :desc => "filters for StatenIsland"
 	option :Bronx,:aliases => "-x", :desc => "filters for Bronx"
-	
+	option :Full, :aliases => "-f", :desc => "Shows all information on event"	
 	
 	desc "search [KEYWORD][Borough]", "Search for an event using a keyword"
 	def search(keyword)
@@ -21,9 +21,8 @@ class EventsCLI < Thor
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
 	 						events = Events.new
 				events.search_borough(keyword,flag)
-			#	ap events.get_event_db.all
-				ds =	events.get_event_db.select(:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)
-					extract_data(ds) 
+			#	ap events.get_event_db.all	
+					extract_data(show_info(options,events)) 
 					user_open_url(events)
 	end
 
@@ -83,13 +82,21 @@ option :info,:aliases => "-t", :desc =>"flag for borough help"
 			 def user_open_url(events)
 			prompt = UserInput.new(message: 'Do you want to open Event URL')
 					if prompt.ask.match(/[yY]/)
-							prompt = UserInput.new(message: 'Enter EventName')
-							event_name = prompt.ask
-							ds = events.get_event_db.select(:EventDetailURL).where(:EventName => event_name)
+							prompt = UserInput.new(message: 'Enter EventID')
+							event_id = prompt.ask
+							ds = events.get_event_db.select(:EventDetailURL).where(:EventID => event_id)
 							ds.each do |k|
 							open_url(k[:EventDetailURL])
 							end
 					end
+			 end
+
+			 def show_info(options,events)
+				 if options[:Full]
+					 return ds = events.get_event_db.all
+				 else
+			return	ds =	events.get_event_db.select(:EventID,:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)	
+				end
 			 end
    }
 end
