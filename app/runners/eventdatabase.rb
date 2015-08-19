@@ -35,6 +35,11 @@ class EventDatabase
       String :RecurringEndDate 
       String :RecurringDays
 		end
+			@@DB.create_table :FavoriteTable do
+  		primary_key :FavoriteID
+			String :EventID
+			end
+
   end
   
 def populate_table(event_array)
