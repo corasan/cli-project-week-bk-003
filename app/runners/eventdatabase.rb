@@ -6,7 +6,7 @@ require 'awesome_print'
 
 class EventDatabase
 	attr_accessor:event
-
+	attr_accessor:favorite
 	def initialize
   @@DB = Sequel.sqlite
 		@@DB.create_table :EventTable do
@@ -38,12 +38,13 @@ class EventDatabase
 
 			@@DB.create_table :FavoriteTable do
   		primary_key :FavoriteID
-			String :EventID
+			String :EventID_fk
 			end
   end
   
 def populate_table(event_array)
   @event = @@DB[:EventTable]
+	@favorite =	@@DB[:FavoriteTable]
 	event_array.each do |value|
     unless value["recur_days"].nil?
       days = value["recur_days"].join(",")
@@ -65,8 +66,6 @@ def populate_table(event_array)
 end
 
 
-	def insert_table
-	end
 end
 
 

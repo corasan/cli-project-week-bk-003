@@ -14,16 +14,16 @@ class EventsCLI < Thor
 	desc "search [KEYWORD][Borough]", "Search for an event using a keyword"
 	def search(keyword)
 			flag = get_borough(options)
-			# puts "Search events by keyword: "
+				# puts "Search events by keyword: "
         # search(keyword)
         print "searching"
         loading
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
-	 						events = Events.new
+	 			events = Events.new
 				events.search_borough(keyword,flag)
-			#	ap events.get_event_db.all	
-					extract_data(show_info(options,events)) 
-					user_open_url(events)
+				extract_data(show_info(options,events)) 
+				favorite(events)
+				user_open_url(events)
 	end
 
 	desc "Help method", "information on how to use cli"
@@ -95,8 +95,20 @@ option :info,:aliases => "-t", :desc =>"flag for borough help"
 				 if options[:Full]
 					 return ds = events.get_event_db.all
 				 else
-			return	ds =	events.get_event_db.select(:EventID,:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)	
+					 return	ds =	events.get_event_db.event.select(:EventID,:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)	
 				end
 			 end
+
+			 def favorite(events)
+					prompt = UserInput.new(message: 'Do you want to add an event to favorites')
+					if prompt.ask.match(/[yY]/)
+						prompt = UserInput.new(message: 'Enter EventID')
+						until prompt.ask.match(/[0-9]/)	
+					end
+					event_id = prompt
+					ds = events.get_event_db.favorite.insert(:EventID_fk => event_id)
+			 end
+			 end
+						
    }
 end

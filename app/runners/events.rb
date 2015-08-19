@@ -44,7 +44,7 @@ class Events
 	end
 	
 	def get_event_db
-		@event_db.event
+		@event_db
 	end
 
 end
