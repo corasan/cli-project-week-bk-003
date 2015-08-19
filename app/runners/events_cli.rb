@@ -17,7 +17,7 @@ class EventsCLI < Thor
 			# puts "Search events by keyword: "
         # search(keyword)
         print "searching"
-        # puts loading
+        loading
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
 	 						events = Events.new
 				events.search_borough(keyword,flag)
