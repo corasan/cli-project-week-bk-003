@@ -4,7 +4,7 @@ gem "nokogiri"
 gem "thor"
 gem "sequel"
 gem "sqlite3"
-
+gem "userinput"
 # gem "optitron"
 
 group "development" do

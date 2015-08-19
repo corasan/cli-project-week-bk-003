@@ -42,7 +42,7 @@ def populate_table(event_array)
     unless value["recur_days"].nil?
       days = value["recur_days"].join(",")
     end
-	@event.insert(:EventName => value["venue_name"],:EventDetailURL => value["event_detail_url"],
+		@event.insert(:EventName => value["venue_name"],:EventDetailURL => value["event_detail_url"],
     :Description => value["web_description"],:VenueName => value["venue_name"],:VenueDetailURL => value["venue_detail_url"],
     :Borough => value["borough"],:Neighborhood => value["neighborhood"],:StreetAddress => value["street_address"],
     :CrossStreet => value["cross_street"],:City => value["city"],:State => value["state"],
