@@ -1,15 +1,46 @@
 # require "pry"
 require "thor"
+require 'awesome_print'
 class EventsCLI < Thor
 
     desc "search KEYWORD", "Search for an even using a keyword"
+		BOROUGH = ["Manhattan","Brooklyn","Queens","Staten Island","Bronx"]
+  option :Manhattan, :aliases => "-m", :desc => "filters for Manhattan"  
+	option :Brooklyn, :aliases => "-b", :desc => "filters for brooklyn"
+	option :Queens, :aliases => "-q", :desc => "filters for Queens"
+	option :StatenIsland, :aliases => "-s", :desc => "filters for StatenIsland"
+	option :Bronx,:aliases => "-x", :desc => "filters for Bronx"
+
     def search(keyword)
-        # puts "Search events by keyword: "
+			flag = ""
+			# puts "Search events by keyword: "
         # search(keyword)
         print "searching"
         # puts loading
         puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
-        scraper(keyword)
+	 			if options[:Manhattan]
+					flag = "Manhattan"
+				elsif options[:Brooklyn]
+					flag = "Brooklyn"
+				elsif options[:Queens]
+					flag = "Queens"
+				elsif options[:Bronx]
+					flag = "Bronx"
+				elsif options[:StatenIsland]
+					flag = "StatenIsland"
+				else
+					flag = "Manhattan+Bronx+Brooklyn+Queens+StatenIsland" 
+				end	
+				events = Events.new
+				events.search_borough(keyword,flag)
+			#	ap events.get_event_db.all
+					ds =	events.get_event_db.select(:EventName,:VenueName,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)
+					 ds.each do |v|
+						  v.each do |k,d|
+							 puts "#{k}: #{d}\n"
+							end
+							puts "-----------------------------------------------------------"
+		end	 
     end
 
     def help
@@ -29,14 +60,6 @@ class EventsCLI < Thor
                 i += 1
             end
         end
-
-        def scraper(keyword)
-            keyword_doc = open("#{EventsListings::BASE_SEARCH}#{keyword}&api-key=#{EventsListings::API_KEY}").read
-            json = JSON.parse(keyword_doc)
-            ap json
-        end
-    }
-    # def search(keyword, category="Music", borough="Manhattan")
-    #     @search_by_keyword = "#{EventsListings::BASE_SEARCH}&#{word}&#{category}&#{borough}&api-key=#{EventsListings::API_KEY}"
-    # end
+ 
+   }
 end

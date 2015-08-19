@@ -2,6 +2,9 @@ source "https://rubygems.org"
 
 gem "nokogiri"
 gem "thor"
+gem "sequel"
+gem "sqlite3"
+
 # gem "optitron"
 
 group "development" do
