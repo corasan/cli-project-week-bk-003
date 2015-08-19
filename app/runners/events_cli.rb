@@ -22,7 +22,7 @@ class EventsCLI < Thor
 	 						events = Events.new
 				events.search_borough(keyword,flag)
 			#	ap events.get_event_db.all
-				ds =	events.get_event_db.select(:EventName,:VenueName,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)
+				ds =	events.get_event_db.select(:VenueName,:Description,:EventDetailURL,:StreetAddress,:City,:State,:PostalCode,:Date)
 					extract_data(ds) 
 					user_open_url(events)
 	end

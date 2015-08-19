@@ -5,6 +5,7 @@ gem "thor"
 gem "sequel"
 gem "sqlite3"
 gem "userinput"
+gem "sanitize"
 # gem "optitron"
 
 group "development" do
