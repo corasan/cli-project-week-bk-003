@@ -2,7 +2,7 @@
 
 # New York Times Event Listing
 
-### Commands
+### CLI
 
 ##### Available commands:
 
