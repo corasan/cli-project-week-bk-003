@@ -12,12 +12,12 @@ class EventsCLI < Thor
         flag = get_borough(options)
         print "searching"
         puts loading
-        puts "-SHOW EVENTS FOR #{keyword.upcase} HERE-"
+        puts "*SHOW EVENTS FOR #{keyword.upcase} HERE*"
         @@events.search_borough(keyword,flag)
         extract_data(show_info(options,@@events.get_event_db.event))
         favorite(@@events)
         user_open_url(@@events)
-        puts "display favorite"
+        puts "Sisplay favorite"
         favorites
     end
 
@@ -25,14 +25,15 @@ class EventsCLI < Thor
     option :info,:aliases => "-t", :desc =>"flag for borough help"
     def help
         if options[:info]
-            puts "Borough Flags"
-            puts "--Manhattan -m, --Brooklyn -b, --Queens -q, --Bronx -x, --StatenIsland -s"
+            puts "Borough Flags:"
+            puts "--Manhattan or -m, --Brooklyn or -b, --Queens or -q, --Bronx or -x, --StatenIsland or -s"
         end
-        puts "Welcome! Search for events in New York."
+        puts "Search for events in New York."
         puts "Available commands: "
-        puts "-search <KEYWORD>"
-        puts "-search_filter <CATEGORY><BOROUGH>"
-        puts "-help"
+        puts "* search <KEYWORD>\t Search events"
+        puts "* help\t\t\t Show the available commands"
+        puts "* help -t\t\t Show the borough flags"
+        puts "* favorites\t\t Show  your favorite events"
     end
 
     desc "Diplays your saved events", "Retrieves saved events from"
