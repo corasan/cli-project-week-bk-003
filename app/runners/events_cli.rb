@@ -7,18 +7,18 @@ class EventsCLI < Thor
     option :Full, :aliases => "-f", :desc => "Shows all information on event"
 
     @@events = Events.new
-    desc "search [KEYWORD][Borough]", "Search for an event using a keyword"
+    desc "search [KEYWORD][Borough]", "Search for events using a keyword"
     def search(keyword)
         flag = get_borough(options)
-        print "searching"
+        print "Searching"
         puts loading
         puts "*SHOW EVENTS FOR #{keyword.upcase} HERE*"
         @@events.search_borough(keyword,flag)
         extract_data(show_info(options,@@events.get_event_db.event))
         favorite(@@events)
         user_open_url(@@events)
-        puts "Sisplay favorite"
-        favorites
+        # puts "display favorite"
+        # favorites
     end
 
     desc "Help method", "information on how to use cli"
@@ -73,7 +73,7 @@ class EventsCLI < Thor
         end
 
         def user_open_url(events)
-            prompt = UserInput.new(message: 'Do you want to open Event URL')
+            prompt = UserInput.new(message: 'Do you want to open event URL in the browser')
             if prompt.ask.match(/[yY]/)
                 prompt = UserInput.new(message: 'Enter EventID')
                 event_id = prompt.ask
@@ -92,9 +92,9 @@ class EventsCLI < Thor
 
         def favorite(events)
             while true
-                prompt = UserInput.new(message: 'Do you want to add an event to favorites')
+                prompt = UserInput.new(message: 'Do you want to add an event to favorites?')
                 if prompt.ask.match(/[yY]/)
-                    prompt =	UserInput.new(message: 'Enter EventID, -Digits[0-9] only!',validation: /[0-9]/)
+                    prompt =	UserInput.new(message: 'Enter EventID(digits only) only!',validation: /[0-9]/)
                     event_id = prompt.ask
                     events.get_event_db.favorite.insert(:EventID_fk => event_id)
                 else

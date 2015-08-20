@@ -2,13 +2,13 @@ class EventDatabase
     attr_accessor:event
     attr_accessor:favorite
     def initialize
-        @@DB = Sequel.connect('sqlite://events_database.db')
-        createTables if !@@DB.table_exists?(:EventTable)
-        @favorite =	@@DB[:FavoriteTable]
-        @event = @@DB[:EventTable]
+        @db = Sequel.connect('sqlite://events_database.db')
+        createTables if !@db.table_exists?(:EventTable)
+        @favorite =	@db[:FavoriteTable]
+        @event = @db[:EventTable]
     end
     def createTables
-        @@DB.create_table :EventTable do
+        @db.create_table :EventTable do
             primary_key :EventID
             String :EventName
             String :EventDetailURL
@@ -35,11 +35,10 @@ class EventDatabase
             String :RecurringDays
         end
 
-        @@DB.create_table :FavoriteTable do
+        @db.create_table :FavoriteTable do
             primary_key :FavoriteID
             foreign_key :EventID_fk
         end
-
     end
     def populate_table(event_array)
         event_array.each do |value|
